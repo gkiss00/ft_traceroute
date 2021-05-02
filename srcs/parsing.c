@@ -59,6 +59,9 @@ void parsing(t_data *data, uint8_t **argv){
             }
         } else {
             settarget(data, argv[i]);
+            if (argv[i + 1])
+                data->packet_size = atoi((char*)argv[i + 1]);
+            return ;
         }
         ++i;
     }

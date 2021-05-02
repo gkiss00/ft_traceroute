@@ -11,6 +11,16 @@ int w_value = 5;
 //     return (strchr("n", arg[1]) != NULL);
 // }
 
+static bool isNum(char *str) {
+    int i = 0;
+    while(str[i]) {
+        if (str[i] > '9' || str[i] < '0')
+            return false;
+        ++i;
+    }
+    return true;
+}
+
 static bool isIntegerOption(char *arg) {
     return (strchr("hfmqw", arg[1]) != NULL);
 }
@@ -23,33 +33,44 @@ static bool isOption(char *arg) {
     return (arg[0] == '-');
 }
 
+static void print_error_packet_length_value(char *str) {
+    printf("traceroute: \"%s\" bad value for packet length\n", str);
+}
+
+static void print_error_packet_length_size_min() {
+    printf("traceroute: packet length must be > 51\n");
+}
+
+static void print_error_packet_length_size_max() {
+    printf("traceroute: packet length must be <= 32768\n");
+}
 
 static void print_error_waittime() {
-    printf("traceroute: wait time must be > 0");
+    printf("traceroute: wait time must be > 0\n");
 }
 
 static void print_error_first_max_ttl() {
-    printf("traceroute: first ttl (%d) may not be greater than max ttl (%d)", f_value, m_value);
+    printf("traceroute: first ttl (%d) may not be greater than max ttl (%d)\n", f_value, m_value);
 }
 
 static void print_error_n_probe() {
-    printf("traceroute: nprobes must be > 0");
+    printf("traceroute: nprobes must be > 0\n");
 }
 
 static void print_error_max_ttl_max() {
-    printf("traceroute: max ttl must be <= 255");
+    printf("traceroute: max ttl must be <= 255\n");
 }
 
 static void print_error_max_ttl_min() {
-    printf("traceroute: max ttl must be > 0");
+    printf("traceroute: max ttl must be > 0\n");
 }
 
 static void print_error_first_ttl_max() {
-    printf("traceroute: first ttl must be <= 255");
+    printf("traceroute: first ttl must be <= 255\n");
 }
 
 static void print_error_first_ttl_min() {
-    printf("traceroute: first ttl must be > 0");
+    printf("traceroute: first ttl must be > 0\n");
 }
 
 static void print_error_argument_required(char opt) {
@@ -147,10 +168,26 @@ static void check_options(char **argv) {
             }
         } else {
             ++nb_target;
+            if (argv[i + 1] && argv[i + 2]) {
+                print_error_usage();
+                exit(EXIT_FAILURE);
+            }
+            if (!isNum(argv[i + 1])) {
+                print_error_packet_length_value(argv[i + 1]);
+                exit(EXIT_FAILURE);
+            }
+            if (atoi(argv[i + 1]) > 32768) {
+                print_error_packet_length_size_max();
+                exit(EXIT_FAILURE);
+            } else if (atoi(argv[i + 1]) < 52) {
+                print_error_packet_length_size_min();
+                exit(EXIT_FAILURE);
+            }
+            check_numeric_option_value(argv);
+            return ;
         }
         ++i;
     }
-    check_numeric_option_value(argv);
 }
 
 static void check_args() {

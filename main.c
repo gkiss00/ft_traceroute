@@ -187,7 +187,7 @@ static void    output() {
 }
 
 static void    print_start() {
-    printf("traceroute to %s (%s), %d hops max, %d byte packets\n", data.target, data.address, 64, 52);
+    printf("traceroute to %s (%s), %d hops max, %d byte packets\n", data.target, data.address, 64, data.packet_size);
 }
 
 int     main(int argc, char **argv) {
