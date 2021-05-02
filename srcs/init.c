@@ -8,8 +8,9 @@ void init_data(t_data *data) {
     data->fd = 0;
     data->ttl = 0;
     data->packet_size = 52;
-    data->type = 0;
+    data->type = AF_INET6;
     data->probe = 0;
+    data->success = false;
     data->timeout.tv_sec = 5;
     data->timeout.tv_usec = 0;
     data->opts.h = 0;
@@ -32,7 +33,7 @@ void init_socket(t_data *data) {
     data->hints.ai_canonname = NULL;
     data->hints.ai_next = NULL;
     
-    int errcode = getaddrinfo ((char*)data->target, NULL, &data->hints, &data->res);
+    int errcode = getaddrinfo((char*)data->target, NULL, &data->hints, &data->res);
     if (errcode < 0) {
         printf("Getaddrinfo failed\n");
         exit(EXIT_FAILURE);
@@ -61,7 +62,7 @@ void init_socket(t_data *data) {
     
     data->fd = socket(data->type, SOCK_RAW, IPPROTO_ICMP);
     if (data->fd < 0) {
-        printf("ping: cannot resolve %s: Unknown host", (char*)data->target);
+        printf("traceroute: unknown host %s\n", (char*)data->target);
         exit(EXIT_FAILURE);
     }
 

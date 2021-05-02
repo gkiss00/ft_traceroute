@@ -56,6 +56,7 @@ typedef struct		    s_data
     int                 ttl;
     int                 packet_size;
     int                 probe;
+    bool                success;
     struct timeval      timeout;
     struct timeval      sending_time;
     struct timeval      receiving_time;

@@ -125,8 +125,8 @@ static char *get_data(uint8_t *buffer) {
         //printf("rec2\n");
     }
     if (strcmp(address_string, data.address) == 0 && data.probe == data.opts.q) {
+        data.success = true;
         //printf("SUCCESS");
-        exit(EXIT_SUCCESS);
     }
     return address_string;
 }
@@ -212,5 +212,7 @@ int     main(int argc, char **argv) {
         node_free(data.node);
         data.node = NULL;
         data.opts.f += 1;
+        if (data.success)
+            exit(EXIT_SUCCESS);
     }
 }
