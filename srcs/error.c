@@ -168,20 +168,22 @@ static void check_options(char **argv) {
             }
         } else {
             ++nb_target;
-            if (argv[i + 1] && argv[i + 2]) {
+            if (argv[i + 1] != NULL && argv[i + 2] != NULL) {
                 print_error_usage();
                 exit(EXIT_FAILURE);
             }
-            if (!isNum(argv[i + 1])) {
-                print_error_packet_length_value(argv[i + 1]);
-                exit(EXIT_FAILURE);
-            }
-            if (atoi(argv[i + 1]) > 32768) {
-                print_error_packet_length_size_max();
-                exit(EXIT_FAILURE);
-            } else if (atoi(argv[i + 1]) < 52) {
-                print_error_packet_length_size_min();
-                exit(EXIT_FAILURE);
+            if (argv[i + 1]) {
+                if (!isNum(argv[i + 1])) {
+                    print_error_packet_length_value(argv[i + 1]);
+                    exit(EXIT_FAILURE);
+                }
+                if (atoi(argv[i + 1]) > 32768) {
+                    print_error_packet_length_size_max();
+                    exit(EXIT_FAILURE);
+                } else if (atoi(argv[i + 1]) < 52) {
+                    print_error_packet_length_size_min();
+                    exit(EXIT_FAILURE);
+                }
             }
             check_numeric_option_value(argv);
             return ;
