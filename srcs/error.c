@@ -36,11 +36,19 @@ static void print_error_n_probe() {
     printf("traceroute: nprobes must be > 0");
 }
 
-static void print_error_max_ttl() {
+static void print_error_max_ttl_max() {
+    printf("traceroute: max ttl must be <= 255");
+}
+
+static void print_error_max_ttl_min() {
     printf("traceroute: max ttl must be > 0");
 }
 
-static void print_error_first_ttl() {
+static void print_error_first_ttl_max() {
+    printf("traceroute: first ttl must be <= 255");
+}
+
+static void print_error_first_ttl_min() {
     printf("traceroute: first ttl must be > 0");
 }
 
@@ -101,12 +109,18 @@ static void check_numeric_option_value(char **argv) {
     //     exit(EXIT_FAILURE);
     // }
     if (f_value <= 0) {
-        print_error_first_ttl();
+        print_error_first_ttl_min();
+        exit(EXIT_FAILURE);
+    } else if (f_value > 255) {
+        print_error_first_ttl_max();
         exit(EXIT_FAILURE);
     } else if (m_value <= 0) {
-        print_error_max_ttl();
+        print_error_max_ttl_min();
         exit(EXIT_FAILURE);
-    }else if (q_value <= 0){
+    } else if (m_value > 255) {
+        print_error_max_ttl_max();
+        exit(EXIT_FAILURE);
+    } else if (q_value <= 0){
         print_error_n_probe();
         exit(EXIT_FAILURE);
     } else if (m_value < f_value) {

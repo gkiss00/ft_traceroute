@@ -125,7 +125,7 @@ static char *get_data(uint8_t *buffer) {
         //printf("rec2\n");
     }
     if (strcmp(address_string, data.address) == 0 && data.probe == data.opts.q) {
-        printf("SUCCESS");
+        //printf("SUCCESS");
         exit(EXIT_SUCCESS);
     }
     return address_string;
@@ -140,6 +140,9 @@ static void receive_ping() {
     int z = recvfrom(data.fd, msg_buffer, sizeof(msg_buffer), 0, (struct sockaddr*)ptr, (socklen_t *)&len); // try to receive a message before time out
     if (z < 0) {
         printf("* ");
+        fflush(stdout);
+        if (data.probe == data.opts.q)
+            printf("\n");
     } else {
         gettimeofday(&data.receiving_time, NULL); // stock the receiving time
         get_data(msg_buffer);
