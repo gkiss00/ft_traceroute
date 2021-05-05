@@ -66,10 +66,7 @@ typedef struct		    s_data
     struct s_option     opts;
 }                       t_data;
 
-void check_error(int argc, char **argv);
-
-void parsing(t_data *data, uint8_t **argv);
-
+//NODE
 t_node *new_node(char *ip, char *domain);
 t_node *node_last(t_node *node);
 t_node *node_good(t_node **node, char *ip, char *domain);
@@ -82,7 +79,32 @@ void time_add_back(t_time **head, t_time *new);
 void add_time(t_node *node, t_time * time);
 void time_free(t_time *node);
 
+//ERROR
+void check_error(int argc, char **argv);
+
+//PARSING
+void parsing(t_data *data, uint8_t **argv);
+
+//INIT
 void init_data(t_data *data);
 void init_socket(t_data *data);
+
+//OUTPUT
+void output(t_data *data);
+void print_start(t_data *data);
+
+//IPV6
+void send_ping_6(t_data *data);
+void receive_ping_6(t_data *data);
+
+//IPV4
+void send_ping(t_data *data);
+void receive_ping(t_data *data);
+
+//UTILS
+double get_time_diff();
+char *get_name(struct sockaddr *addr);
+uint16_t checksum(uint8_t *msg, uint32_t size);
+void print_tab_in_hex(char *name, uint8_t *tab, int len);
 
 #endif

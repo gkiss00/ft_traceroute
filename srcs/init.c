@@ -27,7 +27,7 @@ void init_socket(t_data *data) {
     data->hints.ai_flags = AI_CANONNAME;
     data->hints.ai_family = AF_UNSPEC; //either IPV4 or IPV6
     data->hints.ai_socktype = SOCK_RAW;
-    data->hints.ai_protocol = IPPROTO_ICMP;
+    data->hints.ai_protocol = IPPROTO_ICMP & IPPROTO_ICMPV6;
     data->hints.ai_addrlen = 0;
     data->hints.ai_addr = NULL;
     data->hints.ai_canonname = NULL;
@@ -60,7 +60,11 @@ void init_socket(t_data *data) {
         data->res = data->res->ai_next;
     }
     
-    data->fd = socket(data->type, SOCK_RAW, IPPROTO_ICMP);
+    if (data->type == AF_INET6) {
+        data->fd = socket(data->type, SOCK_RAW, IPPROTO_ICMPV6);
+    } else {
+        data->fd = socket(data->type, SOCK_RAW, IPPROTO_ICMP);
+    }
     if (data->fd < 0) {
         printf("traceroute: unknown host %s\n", (char*)data->target);
         exit(EXIT_FAILURE);

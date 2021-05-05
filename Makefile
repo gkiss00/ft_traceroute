@@ -3,6 +3,9 @@ SRCS				= 	main.c \
 						srcs/error.c \
 						srcs/parsing.c \
 						srcs/init.c \
+						srcs/output.c \
+						srcs/ipv4.c \
+						srcs/ipv6.c \
 
 OBJS				= ${SRCS:.c=.o}
 
