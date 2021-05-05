@@ -40,7 +40,7 @@ static void addOption(t_data *data, uint8_t *opt) {
 }
 
 static bool isIntegerOption(uint8_t *arg) {
-    return (strchr("hfmq", arg[1]) != NULL);
+    return (strchr("hfmqw", arg[1]) != NULL);
 }
 
 static bool isOption(uint8_t *arg) {

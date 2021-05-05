@@ -75,6 +75,7 @@ static char *get_data(t_data *data, uint8_t *buffer) {
         //printf (" (%s)\n", tmp);
         //res = res->ai_next;
     }
+    free(res);
     if (response->icmp_type == ICMP_ECHOREPLY && response->icmp_id == getpid()) {
         //printf("rec1\n");
     } else {

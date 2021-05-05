@@ -87,6 +87,7 @@ const char *get_data_6(t_data *data, uint8_t *buffer, const char *address_string
         //printf (" (%s)\n", tmp);
         //res = res->ai_next;
     }
+    free(res);
     if (response[2] == getpid()) {
         //printf("rec1\n");
     } else {
@@ -120,5 +121,6 @@ void receive_ping_6(t_data *data) {
         //printf("ptr sin6_addr: %s\n", );
         gettimeofday(&data->receiving_time, NULL); // stock the receiving time
         get_data_6(data, msg_buffer, address_string);
+        free(ptr);
     }
 }
