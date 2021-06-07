@@ -18,9 +18,9 @@ void send_ping_6(t_data *data) {
     icmp.icmp_id = getpid();
     icmp.icmp_seq = data->ttl;
 
-    memcpy(buff, &icmp, data->packet_size);
+    memcpy(buff, &icmp, data->packet_size < (int)sizeof(&icmp) ? data->packet_size : sizeof(&icmp));
     icmp.icmp_cksum = checksum(buff, data->packet_size);
-    memcpy(buff, &icmp, data->packet_size);
+    memcpy(buff, &icmp, data->packet_size < (int)sizeof(&icmp) ? data->packet_size : sizeof(&icmp));
 
     gettimeofday(&data->sending_time, NULL); // stock the sending time
     int x = sendto(data->fd, buff, data->packet_size, 0, (struct sockaddr*)data->ptr, sizeof(struct sockaddr_in6));
@@ -34,16 +34,8 @@ const char *get_data_6(t_data *data, uint8_t *buffer, const char *address_string
     void *ptr = NULL;
     uint16_t *response;   
     response = (uint16_t *)buffer;
-    // print_tab_in_hex("tab", buffer, 200);
-    // char t[256];
-    // char adr[256];
-    // memcpy(adr, &buffer[22], 16);
-    // print_tab_in_hex("tab", (uint8_t *)adr, 16);
-    //inet_pton(AF_INET6, adr, t);
-    //const char *address_string = inet_ntop(AF_INET6, adr, t, 256);
-    //printf("t: %s %s\n", t, address_string);
     struct addrinfo hints;
-    struct addrinfo *res = malloc(sizeof(struct addrinfo));
+    struct addrinfo *res = NULL;
         
     int type = 0;
     hints.ai_flags = 0;

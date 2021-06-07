@@ -22,7 +22,7 @@ void init_data(t_data *data) {
 }
 
 void init_socket(t_data *data) {
-    data->res = malloc(sizeof(struct addrinfo));
+    data->res = NULL;
     
     data->hints.ai_flags = AI_CANONNAME;
     data->hints.ai_family = AF_UNSPEC; //either IPV4 or IPV6

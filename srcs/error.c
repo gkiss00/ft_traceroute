@@ -1,12 +1,5 @@
 #include "./../ft_traceroute.h"
 
-int nb_target;
-int h_value = 0;
-int f_value = 1;
-int m_value = 30;
-int q_value = 3;
-int w_value = 5;
-
 // static bool isBooleanOption(char *arg) {
 //     return (strchr("n", arg[1]) != NULL);
 // }
@@ -49,8 +42,8 @@ static void print_error_waittime() {
     printf("traceroute: wait time must be > 0\n");
 }
 
-static void print_error_first_max_ttl() {
-    printf("traceroute: first ttl (%d) may not be greater than max ttl (%d)\n", f_value, m_value);
+static void print_error_first_max_ttl(t_error *error) {
+    printf("traceroute: first ttl (%d) may not be greater than max ttl (%d)\n", error->f_value, error->m_value);
 }
 
 static void print_error_n_probe() {
@@ -103,22 +96,22 @@ static void check_option_format(char *opt) {
     }
 }
 
-static void check_numeric_option_value(char **argv) {
+static void check_numeric_option_value(char **argv, t_error *error) {
     int i = 1;
     while (argv[i]) {
         if(isOption(argv[i])) {
             if (isIntegerOption(argv[i])) {
                 int value = atoi(argv[i + 1]);
                 if (argv[i][1] == 'h') {
-                    h_value = value;
+                    error->h_value = value;
                 } else if (argv[i][1] == 'f') {
-                    f_value = value;
+                    error->f_value = value;
                 } else if (argv[i][1] == 'm') {
-                    m_value = value;
+                    error->m_value = value;
                 } else if (argv[i][1] == 'q') {
-                    q_value = value;
+                    error->q_value = value;
                 } else if (argv[i][1] == 'w') {
-                    w_value = value;
+                    error->w_value = value;
                 }
                 ++i;
             }
@@ -129,31 +122,31 @@ static void check_numeric_option_value(char **argv) {
     //     printf("ping: invalid increment size: `0'\n");
     //     exit(EXIT_FAILURE);
     // }
-    if (f_value <= 0) {
+    if (error->f_value <= 0) {
         print_error_first_ttl_min();
         exit(EXIT_FAILURE);
-    } else if (f_value > 255) {
+    } else if (error->f_value > 255) {
         print_error_first_ttl_max();
         exit(EXIT_FAILURE);
-    } else if (m_value <= 0) {
+    } else if (error->m_value <= 0) {
         print_error_max_ttl_min();
         exit(EXIT_FAILURE);
-    } else if (m_value > 255) {
+    } else if (error->m_value > 255) {
         print_error_max_ttl_max();
         exit(EXIT_FAILURE);
-    } else if (q_value <= 0){
+    } else if (error->q_value <= 0){
         print_error_n_probe();
         exit(EXIT_FAILURE);
-    } else if (m_value < f_value) {
-        print_error_first_max_ttl();
+    } else if (error->m_value < error->f_value) {
+        print_error_first_max_ttl(error);
         exit(EXIT_FAILURE);
-    } else if (w_value <= 0) {
+    } else if (error->w_value <= 0) {
         print_error_waittime();
         exit(EXIT_FAILURE);
     }
 }
 
-static void check_options(char **argv) {
+static void check_options(char **argv, t_error *error) {
     int i = 1;
     while (argv[i]) {
         if(isOption(argv[i])) {
@@ -167,7 +160,7 @@ static void check_options(char **argv) {
                 }
             }
         } else {
-            ++nb_target;
+            ++error->nb_target;
             if (argv[i + 1] != NULL && argv[i + 2] != NULL) {
                 print_error_usage();
                 exit(EXIT_FAILURE);
@@ -185,15 +178,15 @@ static void check_options(char **argv) {
                     exit(EXIT_FAILURE);
                 }
             }
-            check_numeric_option_value(argv);
+            check_numeric_option_value(argv, error);
             return ;
         }
         ++i;
     }
 }
 
-static void check_args() {
-    if (nb_target != 1) {
+static void check_args(t_error *error) {
+    if (error->nb_target != 1) {
         print_error_usage();
         exit(EXIT_FAILURE);
     }
@@ -206,8 +199,19 @@ static void check_nb_args(int argc) {
     }
 }
 
+void init_error(t_error *error) {
+    error->nb_target = 0;
+    error->h_value = 0;
+    error->f_value = 1;
+    error->m_value = 30;
+    error->q_value = 3;
+    error->w_value = 5;
+}
+
 void check_error(int argc, char **argv) {
+    t_error error;
+    init_error(&error);
     check_nb_args(argc);
-    check_options(argv);
-    check_args();
+    check_options(argv, &error);
+    check_args(&error);
 }

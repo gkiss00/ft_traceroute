@@ -28,6 +28,16 @@ typedef struct          s_time
     struct s_time       *next;
 }                       t_time;
 
+typedef struct          s_error
+{
+    int nb_target;
+    int h_value;
+    int f_value;
+    int m_value;
+    int q_value;
+    int w_value;
+}                       t_error;
+
 typedef struct          s_node
 {
     char                *ip;

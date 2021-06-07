@@ -18,9 +18,9 @@ void send_ping(t_data *data) {
     icmp.icmp_id = getpid();
     icmp.icmp_seq = data->ttl;
 
-    memcpy(buff, &icmp, data->packet_size);
+    memcpy(buff, &icmp, data->packet_size < (int)sizeof(&icmp) ? data->packet_size : sizeof(&icmp));
     icmp.icmp_cksum = checksum(buff, data->packet_size);
-    memcpy(buff, &icmp, data->packet_size);
+    memcpy(buff, &icmp, data->packet_size < (int)sizeof(&icmp) ? data->packet_size : sizeof(&icmp));
 
     gettimeofday(&data->sending_time, NULL); // stock the sending time
     int x = sendto(data->fd, buff, data->packet_size, 0, (struct sockaddr*)data->ptr, sizeof(struct sockaddr));
@@ -38,7 +38,7 @@ static char *get_data(t_data *data, uint8_t *buffer) {
     struct in_addr *address = (struct in_addr *)&buffer[HEADER_SIZE];
     char *address_string = inet_ntoa(*address);
     struct addrinfo hints;
-    struct addrinfo *res = malloc(sizeof(struct addrinfo));
+    struct addrinfo *res = NULL;
         
     int type = 0;
     hints.ai_flags = AI_CANONNAME;
