@@ -16,7 +16,7 @@ FLAGS				= -Wall -Wextra -Werror
 all :				${NAME}
 
 ${NAME} :			${OBJS}
-					gcc -o ${NAME} ${FLAGS} ${SRCS}
+					gcc -o ${NAME} ${FLAGS} ${SRCS} -lm
 
 clean :				
 					rm -rf ${OBJS}
