@@ -18,9 +18,9 @@ void send_ping(t_data *data) {
     icmp.icmp_id = getpid();
     icmp.icmp_seq = data->ttl;
 
-    memcpy(buff, &icmp, data->packet_size < (int)sizeof(&icmp) ? data->packet_size : sizeof(&icmp));
+    memcpy(buff, &icmp, data->packet_size < (int)sizeof(&icmp) ? (int)data->packet_size : (int)sizeof(&icmp));
     icmp.icmp_cksum = checksum(buff, data->packet_size);
-    memcpy(buff, &icmp, data->packet_size < (int)sizeof(&icmp) ? data->packet_size : sizeof(&icmp));
+    memcpy(buff, &icmp, data->packet_size < (int)sizeof(&icmp) ? (int)data->packet_size : (int)sizeof(&icmp));
 
     gettimeofday(&data->sending_time, NULL); // stock the sending time
     int x = sendto(data->fd, buff, data->packet_size, 0, (struct sockaddr*)data->ptr, sizeof(struct sockaddr));
