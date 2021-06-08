@@ -58,8 +58,10 @@ void traceroute() {
         node_free(data.node);
         data.node = NULL;
         data.opts.f += 1;
-        if (data.success)
+        if (data.success){
+            close(data.fd);
             exit(EXIT_SUCCESS);
+        }
     }
 }
 
@@ -77,8 +79,10 @@ void traceroute_6() {
         node_free(data.node);
         data.node = NULL;
         data.opts.f += 1;
-        if (data.success)
+        if (data.success){
+            close(data.fd);
             exit(EXIT_SUCCESS);
+        }
     }
 }
 
